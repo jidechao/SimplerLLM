@@ -12,11 +12,13 @@ class EmbeddingsLLM:
         provider=EmbeddingsProvider.OPENAI,
         model_name="text-embedding-3-small",
         api_key=None,
+        base_url=None,
         user_id = None,
     ):
         self.provider = provider
         self.model_name = model_name
         self.api_key = api_key
+        self.base_url = base_url
         self.user_id = user_id
         
 
@@ -25,10 +27,11 @@ class EmbeddingsLLM:
         provider=None,
         model_name=None,
         api_key=None,
+        base_url=None,
         user_id = None,
     ):
         if provider == EmbeddingsProvider.OPENAI:
-            return OpenAILLM(provider, model_name, api_key)
+            return OpenAILLM(provider, model_name, api_key,base_url)
 
         else:
             return None
@@ -40,10 +43,10 @@ class EmbeddingsLLM:
 
 
 class OpenAILLM(EmbeddingsLLM):
-    def __init__(self, model, model_name,api_key):
-        super().__init__(model, model_name,api_key)
+    def __init__(self, model, model_name,api_key,base_url):
+        super().__init__(model, model_name,api_key,base_url)
         self.api_key = api_key or os.getenv("OPENAI_API_KEY", "")
-
+        self.base_url = base_url or os.getenv("OPENAI_ENCODING_URL", "")
 
     def generate_embeddings(
         self,
@@ -58,6 +61,8 @@ class OpenAILLM(EmbeddingsLLM):
             user_input=user_input,
             model_name=model_name,
             full_response=full_response,
+            api_key=self.api_key,
+            base_url=self.base_url
         )
     
     async def generate_embeddings_async(
@@ -73,6 +78,8 @@ class OpenAILLM(EmbeddingsLLM):
             user_input=user_input,
             model_name=model_name,
             full_response=full_response,
+            api_key=self.api_key,
+            base_url=self.base_url
         )
 
 
