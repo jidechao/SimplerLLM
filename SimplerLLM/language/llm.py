@@ -24,13 +24,15 @@ class LLM:
         temperature=0.7,
         top_p=1.0,
         api_key=None,
+        base_url=None,
         user_id = None,
     ):
         self.provider = provider
         self.model_name = model_name
         self.temperature = temperature
         self.top_p = top_p
-        self.api_key = api_key
+        self.api_key = api_key,
+        self.base_url= base_url,
         self.user_id = user_id
 
     @staticmethod
@@ -40,11 +42,12 @@ class LLM:
         temperature=0.7,
         top_p=1.0,
         api_key=None,
+        base_url=None,
         user_id = None,
         
     ):
         if provider == LLMProvider.OPENAI:
-            return OpenAILLM(provider, model_name, temperature, top_p, api_key)
+            return OpenAILLM(provider, model_name, temperature, top_p, api_key,base_url)
         if provider == LLMProvider.GEMINI:
             return GeminiLLM(provider, model_name, temperature, top_p, api_key)
         if provider == LLMProvider.ANTHROPIC:
@@ -73,9 +76,10 @@ class LLM:
 
 
 class OpenAILLM(LLM):
-    def __init__(self, provider, model_name, temperature, top_p, api_key):
-        super().__init__(provider, model_name, temperature, top_p, api_key)
+    def __init__(self, provider, model_name, temperature, top_p, api_key, base_url):
+        super().__init__(provider, model_name, temperature, top_p, api_key,base_url)
         self.api_key = api_key or os.getenv("OPENAI_API_KEY", "")
+        self.base_url = base_url or os.getenv("OPENAI_BASE_URL", "")
 
     
     def append_messages(self, system_prompt : str, messages: list):
@@ -120,6 +124,7 @@ class OpenAILLM(LLM):
         params.update(
             {
                 "api_key": self.api_key,
+                "base_url": self.base_url,
                 "messages": model_messages,
                 "max_tokens": max_tokens,
                 "full_response": full_response,
@@ -160,6 +165,7 @@ class OpenAILLM(LLM):
         params.update(
             {
                 "api_key": self.api_key,
+                "base_url": self.base_url,
                 "messages": model_messages,
                 "max_tokens": max_tokens,
                 "full_response": full_response,
