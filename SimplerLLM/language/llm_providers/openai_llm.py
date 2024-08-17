@@ -22,9 +22,10 @@ def generate_response(
     top_p=1.0,
     full_response=False,
     api_key = None,
+    base_url = None,
 ):
     start_time = time.time() if full_response else None
-    openai_client = OpenAI(api_key=api_key)
+    openai_client = OpenAI(api_key=api_key,base_url=base_url)
     
     for attempt in range(MAX_RETRIES):
         try:
@@ -69,9 +70,10 @@ async def generate_response_async(
     top_p=1.0,
     full_response=False,
     api_key = None,
+    base_url = None,
 ):
     start_time = time.time() if full_response else None
-    async_openai_client = AsyncOpenAI(api_key=api_key)
+    async_openai_client = AsyncOpenAI(api_key=api_key,base_url=base_url)
    
     for attempt in range(MAX_RETRIES):
         try:
@@ -112,7 +114,8 @@ def generate_embeddings(
     model_name,
     user_input=None,
     full_response = False,
-    api_key = None
+    api_key = None,
+    base_url = None,
 ):
     
     if not user_input:
@@ -120,7 +123,7 @@ def generate_embeddings(
     
     start_time = time.time() if full_response else None
 
-    openai_client = OpenAI(api_key=api_key)
+    openai_client = OpenAI(api_key=api_key,base_url=base_url)
 
     for attempt in range(MAX_RETRIES):
         try:
@@ -160,8 +163,9 @@ async def generate_embeddings_async(
     user_input=None,
     full_response = False,
     api_key = None,
+    base_url = None,
 ):
-    async_openai_client = AsyncOpenAI(api_key=api_key)
+    async_openai_client = AsyncOpenAI(api_key=api_key,base_url=base_url)
     if not user_input:
         raise ValueError("user_input must be provided.")
     
